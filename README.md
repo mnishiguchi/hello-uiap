@@ -55,19 +55,19 @@ arduino-ide
 Open:
 
 ```text
-~/Projects/uiap/hello-uiap/ch32v003_arduino_blink/ch32v003_arduino_blink.ino
+ch32v003_arduino_blink/ch32v003_arduino_blink.ino
 ```
 
 Guide:
 
 ```text
-~/Projects/uiap/hello-uiap/ch32v003_arduino_blink/README.md
+ch32v003_arduino_blink/README.md
 ```
 
-For CH32V006 with `ch32fun`:
+For CH32V006 with `ch32fun`, run from the repository root:
 
 ```sh
-cd ~/Projects/uiap/hello-uiap/ch32v006_ch32fun_blink
+cd ch32v006_ch32fun_blink
 make
 make flash
 ```
@@ -81,5 +81,5 @@ arduino-ide
 Open:
 
 ```text
-~/Projects/uiap/hello-uiap/ch32v006_arduino_blink/ch32v006_arduino_blink.ino
+ch32v006_arduino_blink/ch32v006_arduino_blink.ino
 ```

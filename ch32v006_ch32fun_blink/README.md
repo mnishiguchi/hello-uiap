@@ -27,8 +27,10 @@ make -C ../ch32fun/minichlink
 
 ## Build and upload
 
+From the repository root:
+
 ```sh
-cd ~/Projects/uiap/hello-uiap/ch32v006_ch32fun_blink
+cd ch32v006_ch32fun_blink
 make
 make flash
 ```

@@ -1,6 +1,6 @@
 # CH32V003 Arduino Blink
 
-Concise Linux setup for the UIAPduino Pro Micro CH32V003 V1.4.
+Concise Arduino IDE setup for the UIAPduino Pro Micro CH32V003 V1.4.
 
 ## TL;DR
 
@@ -14,28 +14,26 @@ Concise Linux setup for the UIAPduino Pro Micro CH32V003 V1.4.
 
 Success is reported as `Image written.`. The orange LED should blink.
 
-## Verified setup
+## Tested with
 
-LMDE 7 x86-64, Arduino IDE 2.3.10 official ZIP, UIAPduino package
-1.0.42, and UIAPduino Pro Micro CH32V003 V1.4. The built-in orange LED is pin
-`2`.
+- Arduino IDE 2.3.10
+- UIAPduino package 1.0.42
+- UIAPduino Pro Micro CH32V003 V1.4
+
+The built-in orange LED is pin `2`.
 
 ## One-time setup
 
 ### 1. Install Arduino IDE
 
-Download the Linux x86-64 ZIP from the
-[Arduino software page](https://www.arduino.cc/en/software), extract it, and
-place it under `~/Applications`:
+Install Arduino IDE by your preferred method. The official download is on the
+[Arduino software page](https://www.arduino.cc/en/software).
+
+Examples below assume Arduino IDE can be started with:
 
 ```bash
-unzip arduino-ide_2.3.10_Linux_64bit.zip
-mv arduino-ide_2.3.10_Linux_64bit \
-  "$HOME/Applications/arduino-ide-2.3.10"
+arduino-ide
 ```
-
-This machine provides the `arduino-ide` command and a Cinnamon menu entry. The
-application is installed at `~/Applications/arduino-ide-2.3.10`.
 
 ### 2. Install the UIAPduino board package
 
@@ -53,7 +51,7 @@ Keep all other board options at their defaults.
 
 ### 3. Configure Linux USB access
 
-Install the manufacturer's udev rule:
+On Linux, install the manufacturer's udev rule:
 
 ```bash
 sudo wget -O /etc/udev/rules.d/99-minichlink-uiap.rules \
@@ -132,4 +130,4 @@ presses.
 - [Official UIAPduino V1.4 guide](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4)
 - [Arduino IDE downloads](https://www.arduino.cc/en/software)
 - [UIAPduino board manager](https://github.com/YuukiUmeta-UIAP/board_manager_files)
-- [Worklog](../worklog/2026-08-29.md)
+- [Repository overview](../README.md)

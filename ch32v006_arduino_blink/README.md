@@ -4,7 +4,7 @@
 
 1. Start Arduino IDE with `arduino-ide`.
 2. Select **Tools > Board > UIAPduino > Pro Micro CH32V006 (Experimental)**.
-3. Open `ch32v006_arduino_blink.ino`.
+3. Open [`ch32v006_arduino_blink.ino`](ch32v006_arduino_blink.ino).
 4. Click **Upload**. No reset-button timing is required.
 
 The onboard LED on `PC3` repeats two short flashes followed by a pause.
@@ -18,6 +18,17 @@ it in the board menu and uploads through the board's onboard programmer.
 The official UIAP V1.1 documentation does not currently support Arduino IDE.
 Basic GPIO and timing are tested here; other Arduino APIs and libraries may
 still need validation.
+
+## Install the local extension
+
+Copy the files from [`../arduino_support`](../arduino_support) into the matching
+UIAP core directory in your Arduino data folder:
+
+```text
+<arduino-data>/packages/UIAP/hardware/ch32v/1.0.42/
+```
+
+On Linux, `<arduino-data>` is typically `~/.arduino15`.
 
 ## After updating the UIAPduino board package
 
