@@ -1,0 +1,357 @@
+
+blink.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <InterruptVector>:
+	void InterruptVectorDefault()  __attribute__((naked)) __attribute((section(".init"))) __attribute((naked));
+
+	void InterruptVectorDefault( void )
+	{
+		#if !defined(FUNCONF_TINYVECTOR) || !FUNCONF_TINYVECTOR
+			asm volatile( DEFAULT_INTERRUPT_VECTOR_CONTENTS );
+   0:	1140006f          	j	114 <handle_reset>
+   4:	00000000          	.word	0x00000000
+   8:	000001d0          	.word	0x000001d0
+   c:	00000184          	.word	0x00000184
+	...
+  30:	00000184          	.word	0x00000184
+  34:	00000000          	.word	0x00000000
+  38:	00000184          	.word	0x00000184
+  3c:	00000000          	.word	0x00000000
+  40:	00000184          	.word	0x00000184
+  44:	00000184          	.word	0x00000184
+  48:	00000184          	.word	0x00000184
+  4c:	00000184          	.word	0x00000184
+  50:	00000184          	.word	0x00000184
+  54:	00000184          	.word	0x00000184
+  58:	00000184          	.word	0x00000184
+  5c:	00000184          	.word	0x00000184
+  60:	00000184          	.word	0x00000184
+  64:	00000184          	.word	0x00000184
+  68:	00000184          	.word	0x00000184
+  6c:	00000184          	.word	0x00000184
+  70:	00000184          	.word	0x00000184
+  74:	00000184          	.word	0x00000184
+  78:	00000184          	.word	0x00000184
+  7c:	00000184          	.word	0x00000184
+  80:	00000184          	.word	0x00000184
+  84:	00000184          	.word	0x00000184
+  88:	00000184          	.word	0x00000184
+  8c:	00000184          	.word	0x00000184
+  90:	00000184          	.word	0x00000184
+  94:	00000184          	.word	0x00000184
+  98:	00000184          	.word	0x00000184
+  9c:	00000184          	.word	0x00000184
+  a0:	00000184          	.word	0x00000184
+  a4:	0001                	nop
+	...
+
+Disassembly of section .text:
+
+000000a8 <PrintHex>:
+	while( (*DMDATA0) & 0x80 );
+  a8:	e00007b7          	lui	a5,0xe0000
+  ac:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbfffe0f4>
+  b0:	4398                	lw	a4,0(a5)
+  b2:	08077713          	andi	a4,a4,128
+  b6:	ff6d                	bnez	a4,b0 <PrintHex+0x8>
+	*DMDATA0 = 0x78302088; //" 0x"
+  b8:	78302737          	lui	a4,0x78302
+  bc:	08870713          	addi	a4,a4,136 # 78302088 <_eusrstack+0x58300088>
+		while( (*DMDATA0) & 0x80 );
+  c0:	e00006b7          	lui	a3,0xe0000
+	*DMDATA0 = 0x78302088; //" 0x"
+  c4:	c398                	sw	a4,0(a5)
+		while( (*DMDATA0) & 0x80 );
+  c6:	0f468693          	addi	a3,a3,244 # e00000f4 <_eusrstack+0xbfffe0f4>
+	for( shift = 28; shift >= 0; shift -= 4 )
+  ca:	4771                	li	a4,28
+		s += ( s < 10 ) ? '0' : ('a' - 10);
+  cc:	45a5                	li	a1,9
+	for( shift = 28; shift >= 0; shift -= 4 )
+  ce:	5671                	li	a2,-4
+		while( (*DMDATA0) & 0x80 );
+  d0:	429c                	lw	a5,0(a3)
+  d2:	0807f793          	andi	a5,a5,128
+  d6:	ffed                	bnez	a5,d0 <PrintHex+0x28>
+		int s = (n>>shift) & 0xf;
+  d8:	00e55333          	srl	t1,a0,a4
+  dc:	00f37313          	andi	t1,t1,15
+		s += ( s < 10 ) ? '0' : ('a' - 10);
+  e0:	0065b7b3          	sltu	a5,a1,t1
+  e4:	40f007b3          	neg	a5,a5
+  e8:	0277f793          	andi	a5,a5,39
+  ec:	03078793          	addi	a5,a5,48
+  f0:	979a                	add	a5,a5,t1
+		*DMDATA0 = 0x85 | (s<<8); //" 0x"
+  f2:	07a2                	slli	a5,a5,0x8
+  f4:	0857e793          	ori	a5,a5,133
+  f8:	c29c                	sw	a5,0(a3)
+	for( shift = 28; shift >= 0; shift -= 4 )
+  fa:	1771                	addi	a4,a4,-4
+  fc:	fcc71ae3          	bne	a4,a2,d0 <PrintHex+0x28>
+}
+ 100:	8082                	ret
+
+00000102 <DelaySysTick>:
+#endif
+
+void DelaySysTick( uint32_t n )
+{
+#if defined(CH32V003) || defined(CH32V00x)
+	uint32_t targend = SysTick->CNT + n;
+ 102:	e000f737          	lui	a4,0xe000f
+ 106:	471c                	lw	a5,8(a4)
+ 108:	953e                	add	a0,a0,a5
+	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
+ 10a:	471c                	lw	a5,8(a4)
+ 10c:	8f89                	sub	a5,a5,a0
+ 10e:	fe07cee3          	bltz	a5,10a <DelaySysTick+0x8>
+	uint64_t targend = SysTick->CNT - n;
+	while( ((int64_t)( SysTick->CNT - targend )) > 0 );
+#else
+	#error DelaySysTick not defined.
+#endif
+}
+ 112:	8082                	ret
+
+00000114 <handle_reset>:
+	asm volatile( "\n\
+ 114:	20000197          	auipc	gp,0x20000
+ 118:	2e818193          	addi	gp,gp,744 # 200003fc <__global_pointer$>
+ 11c:	20002117          	auipc	sp,0x20002
+ 120:	ee410113          	addi	sp,sp,-284 # 20002000 <_eusrstack>
+ 124:	6509                	lui	a0,0x2
+ 126:	88050513          	addi	a0,a0,-1920 # 1880 <ch32fun.c.21e83c4a+0x89e>
+ 12a:	30051073          	csrw	mstatus,a0
+ 12e:	00000697          	auipc	a3,0x0
+ 132:	ed268693          	addi	a3,a3,-302 # 0 <InterruptVector>
+ 136:	0036e693          	ori	a3,a3,3
+ 13a:	30569073          	csrw	mtvec,a3
+asm volatile(
+ 13e:	c0418513          	addi	a0,gp,-1020 # 20000000 <_data_vma>
+ 142:	c0418593          	addi	a1,gp,-1020 # 20000000 <_data_vma>
+ 146:	4601                	li	a2,0
+ 148:	00b55663          	bge	a0,a1,154 <handle_reset+0x40>
+ 14c:	c110                	sw	a2,0(a0)
+ 14e:	0511                	addi	a0,a0,4
+ 150:	feb54ee3          	blt	a0,a1,14c <handle_reset+0x38>
+ 154:	29800513          	li	a0,664
+ 158:	c0418593          	addi	a1,gp,-1020 # 20000000 <_data_vma>
+ 15c:	c0418613          	addi	a2,gp,-1020 # 20000000 <_data_vma>
+ 160:	00c58863          	beq	a1,a2,170 <handle_reset+0x5c>
+ 164:	4114                	lw	a3,0(a0)
+ 166:	c194                	sw	a3,0(a1)
+ 168:	0511                	addi	a0,a0,4
+ 16a:	0591                	addi	a1,a1,4
+ 16c:	fec59ae3          	bne	a1,a2,160 <handle_reset+0x4c>
+	SysTick->CTLR = 1;
+ 170:	e000f7b7          	lui	a5,0xe000f
+ 174:	4705                	li	a4,1
+ 176:	c398                	sw	a4,0(a5)
+asm volatile(
+ 178:	23200793          	li	a5,562
+ 17c:	34179073          	csrw	mepc,a5
+ 180:	30200073          	mret
+
+00000184 <ADC1_2_IRQHandler>:
+
+// Return the Machine Exception Program Register (MEPC)
+static inline uint32_t __get_MEPC(void)
+{
+	uint32_t result;
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mepc" : "=r"(result));
+ 184:	34102573          	csrr	a0,mepc
+	PrintHex( __get_MEPC() ); // "addr2line -e debugprintfdemo.elf 0x000007e6" ---> debugprintfdemo.c:45
+ 188:	3705                	jal	a8 <PrintHex>
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0, mstatus": "=r"(result) );
+ 18a:	30002573          	csrr	a0,mstatus
+	PrintHex( __get_MSTATUS() );
+ 18e:	3f29                	jal	a8 <PrintHex>
+
+// Return the Machine Trap Value Register (MTVAL)
+static inline uint32_t __get_MTVAL(void)
+{
+	uint32_t result;
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mtval" : "=r" (result) );
+ 190:	34302573          	csrr	a0,mtval
+	PrintHex( __get_MTVAL() );
+ 194:	3f11                	jal	a8 <PrintHex>
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mcause": "=r"(result));
+ 196:	34202573          	csrr	a0,mcause
+	PrintHex( __get_MCAUSE() );
+ 19a:	3739                	jal	a8 <PrintHex>
+	while( (*DMDATA0) & 0x80 );
+ 19c:	e00007b7          	lui	a5,0xe0000
+ 1a0:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbfffe0f4>
+ 1a4:	4398                	lw	a4,0(a5)
+ 1a6:	08077713          	andi	a4,a4,128
+ 1aa:	ff6d                	bnez	a4,1a4 <ADC1_2_IRQHandler+0x20>
+	*DMDATA0 = 0x0a85;
+ 1ac:	6705                	lui	a4,0x1
+ 1ae:	a8570713          	addi	a4,a4,-1403 # a85 <_data_lma+0x7ed>
+ 1b2:	c398                	sw	a4,0(a5)
+	while( (*DMDATA0) & 0x80 );
+ 1b4:	e00007b7          	lui	a5,0xe0000
+ 1b8:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbfffe0f4>
+ 1bc:	4398                	lw	a4,0(a5)
+ 1be:	08077713          	andi	a4,a4,128
+ 1c2:	ff6d                	bnez	a4,1bc <ADC1_2_IRQHandler+0x38>
+	*DMDATA0 = 0xaaaaaa83;
+ 1c4:	aaaab737          	lui	a4,0xaaaab
+ 1c8:	a8370713          	addi	a4,a4,-1405 # aaaaaa83 <_eusrstack+0x8aaa8a83>
+ 1cc:	c398                	sw	a4,0(a5)
+	asm volatile( "1: j 1b" );
+ 1ce:	a001                	j	1ce <ADC1_2_IRQHandler+0x4a>
+
+000001d0 <NMI_Handler>:
+	RCC->INTR |= RCC_CSSC;	// clear the clock security int flag
+ 1d0:	40021737          	lui	a4,0x40021
+ 1d4:	471c                	lw	a5,8(a4)
+ 1d6:	008006b7          	lui	a3,0x800
+ 1da:	8fd5                	or	a5,a5,a3
+ 1dc:	c71c                	sw	a5,8(a4)
+
+000001de <SystemInit>:
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_0;               // +0 Cycle Latency
+	#endif
+#elif defined(CH32V00x)
+	// Per TRM
+	#if FUNCONF_SYSTEM_CORE_CLOCK > 25000000
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_2;
+ 1de:	400227b7          	lui	a5,0x40022
+ 1e2:	4709                	li	a4,2
+ 1e4:	c398                	sw	a4,0(a5)
+#elif defined(FUNCONF_USE_HSI) && FUNCONF_USE_HSI
+	#if defined(CH32V30x) || defined(CH32V20x) || defined(CH32L103) || defined(CH32V10x)
+		EXTEN->EXTEN_CTR |= EXTEN_PLL_HSI_PRE;
+	#endif
+	#if defined(FUNCONF_USE_PLL) && FUNCONF_USE_PLL
+		RCC->CFGR0 = BASE_CFGR0;
+ 1e6:	400217b7          	lui	a5,0x40021
+		RCC->CTLR  = BASE_CTLR | RCC_HSION | RCC_PLLON; 			// Use HSI, enable PLL.
+ 1ea:	01080737          	lui	a4,0x1080
+		RCC->CFGR0 = BASE_CFGR0;
+ 1ee:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x2001f004>
+		RCC->CTLR  = BASE_CTLR | RCC_HSION | RCC_PLLON; 			// Use HSI, enable PLL.
+ 1f2:	08170713          	addi	a4,a4,129 # 1080081 <blink.c.be81a427+0x107dcbc>
+ 1f6:	c398                	sw	a4,0(a5)
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_0;
+	#endif
+#endif
+
+#ifndef CH5xx
+	RCC->INTR  = 0x009F0000;                               // Clear PLL, CSSC, HSE, HSI and LSI ready flags.
+ 1f8:	009f0737          	lui	a4,0x9f0
+ 1fc:	c798                	sw	a4,8(a5)
+#endif
+
+#if defined(FUNCONF_USE_PLL) && FUNCONF_USE_PLL && !defined(CH5xx)
+	while((RCC->CTLR & RCC_PLLRDY) == 0) {};                       	// Wait till PLL is ready
+ 1fe:	4398                	lw	a4,0(a5)
+ 200:	00671693          	slli	a3,a4,0x6
+ 204:	fe06dde3          	bgez	a3,1fe <SystemInit+0x20>
+	#if defined(CH32H41x)
+		RCC->PLLCFGR |= RCC_SYSPLL_GATE;
+	#endif
+	uint32_t tmp32 = RCC->CFGR0 & ~(0x03);							// clr the SW
+ 208:	43d8                	lw	a4,4(a5)
+	RCC->CFGR0 = tmp32 | RCC_SW_PLL;                       			// Select PLL as system clock source
+	while ((RCC->CFGR0 & (uint32_t)RCC_SWS) != (uint32_t)0x08); 	// Wait till PLL is used as system clock source
+ 20a:	400216b7          	lui	a3,0x40021
+	uint32_t tmp32 = RCC->CFGR0 & ~(0x03);							// clr the SW
+ 20e:	9b71                	andi	a4,a4,-4
+	RCC->CFGR0 = tmp32 | RCC_SW_PLL;                       			// Select PLL as system clock source
+ 210:	00276713          	ori	a4,a4,2
+ 214:	c3d8                	sw	a4,4(a5)
+	while ((RCC->CFGR0 & (uint32_t)RCC_SWS) != (uint32_t)0x08); 	// Wait till PLL is used as system clock source
+ 216:	4721                	li	a4,8
+ 218:	42dc                	lw	a5,4(a3)
+ 21a:	8bb1                	andi	a5,a5,12
+ 21c:	fee79ee3          	bne	a5,a4,218 <SystemInit+0x3a>
+	*DMDATA1 = 0x00;
+ 220:	e00007b7          	lui	a5,0xe0000
+ 224:	0e07ac23          	sw	zero,248(a5) # e00000f8 <_eusrstack+0xbfffe0f8>
+	*DMDATA0 = 0x80;
+ 228:	08000713          	li	a4,128
+ 22c:	0ee7aa23          	sw	a4,244(a5)
+	SetupDebugPrintf();
+#endif
+#if defined(FUNCONF_SUPPORT_CONSTRUCTORS) && FUNCONF_SUPPORT_CONSTRUCTORS
+	CallConstructors();
+#endif
+}
+ 230:	8082                	ret
+
+00000232 <main>:
+#include "ch32fun.h"
+
+#define LED_BUILTIN PC3
+
+int main(void)
+{
+ 232:	1151                	addi	sp,sp,-12
+ 234:	c406                	sw	ra,8(sp)
+ 236:	c222                	sw	s0,4(sp)
+ 238:	c026                	sw	s1,0(sp)
+	SystemInit();
+ 23a:	3755                	jal	1de <SystemInit>
+	funGpioInitAll();
+ 23c:	40021737          	lui	a4,0x40021
+ 240:	4f1c                	lw	a5,24(a4)
+	funPinMode(LED_BUILTIN, GPIO_Speed_10MHz | GPIO_CNF_OUT_PP);
+ 242:	400116b7          	lui	a3,0x40011
+	funGpioInitAll();
+ 246:	0357e793          	ori	a5,a5,53
+ 24a:	cf1c                	sw	a5,24(a4)
+	funPinMode(LED_BUILTIN, GPIO_Speed_10MHz | GPIO_CNF_OUT_PP);
+ 24c:	429c                	lw	a5,0(a3)
+ 24e:	7745                	lui	a4,0xffff1
+ 250:	177d                	addi	a4,a4,-1 # ffff0fff <_eusrstack+0xdffeefff>
+ 252:	8ff9                	and	a5,a5,a4
+ 254:	6705                	lui	a4,0x1
+ 256:	8fd9                	or	a5,a5,a4
+ 258:	c29c                	sw	a5,0(a3)
+
+	while (1)
+	{
+		funDigitalWrite(LED_BUILTIN, FUN_HIGH);
+ 25a:	40011437          	lui	s0,0x40011
+ 25e:	47a1                	li	a5,8
+		Delay_Ms(150);
+ 260:	000dc537          	lui	a0,0xdc
+		funDigitalWrite(LED_BUILTIN, FUN_HIGH);
+ 264:	c81c                	sw	a5,16(s0)
+		Delay_Ms(150);
+ 266:	ba050513          	addi	a0,a0,-1120 # dbba0 <blink.c.be81a427+0xd97db>
+ 26a:	3d61                	jal	102 <DelaySysTick>
+		funDigitalWrite(LED_BUILTIN, FUN_LOW);
+ 26c:	000804b7          	lui	s1,0x80
+		Delay_Ms(150);
+ 270:	000dc537          	lui	a0,0xdc
+		funDigitalWrite(LED_BUILTIN, FUN_LOW);
+ 274:	c804                	sw	s1,16(s0)
+		Delay_Ms(150);
+ 276:	ba050513          	addi	a0,a0,-1120 # dbba0 <blink.c.be81a427+0xd97db>
+ 27a:	3561                	jal	102 <DelaySysTick>
+		funDigitalWrite(LED_BUILTIN, FUN_HIGH);
+ 27c:	47a1                	li	a5,8
+		Delay_Ms(150);
+ 27e:	000dc537          	lui	a0,0xdc
+		funDigitalWrite(LED_BUILTIN, FUN_HIGH);
+ 282:	c81c                	sw	a5,16(s0)
+		Delay_Ms(150);
+ 284:	ba050513          	addi	a0,a0,-1120 # dbba0 <blink.c.be81a427+0xd97db>
+ 288:	3dad                	jal	102 <DelaySysTick>
+		funDigitalWrite(LED_BUILTIN, FUN_LOW);
+		Delay_Ms(1000);
+ 28a:	005b9537          	lui	a0,0x5b9
+		funDigitalWrite(LED_BUILTIN, FUN_LOW);
+ 28e:	c804                	sw	s1,16(s0)
+		Delay_Ms(1000);
+ 290:	d8050513          	addi	a0,a0,-640 # 5b8d80 <blink.c.be81a427+0x5b69bb>
+ 294:	35bd                	jal	102 <DelaySysTick>
+	while (1)
+ 296:	b7d1                	j	25a <main+0x28>

@@ -1,0 +1,27 @@
+# Arduino loads this alongside the UIAPduino core's original boards.txt.
+
+##############################################################################
+## UIAPduino Pro Micro CH32V006 V1.1 (experimental)
+
+UIAP_V006.name=Pro Micro CH32V006 (Experimental)
+UIAP_V006.build.core=arduino
+UIAP_V006.build.board=CH32V006K8
+UIAP_V006.build.series=CH32VM00X
+UIAP_V006.build.variant=CH32VM00X/CH32V006K8
+UIAP_V006.build.variant_h=variant_CH32V006K8.h
+UIAP_V006.build.mcu=QingKe-V2C
+UIAP_V006.build.chip=CH32V006K8
+UIAP_V006.build.march=rv32ecxw
+UIAP_V006.build.mabi=ilp32e
+UIAP_V006.build.math_lib_gcc=-lm
+UIAP_V006.build.IQ_math_RV32=
+UIAP_V006.build.ch_extra_lib=-lprintf
+UIAP_V006.build.flags.clock=-DSYSCLK_FREQ_48MHz_HSI=48000000 -DF_CPU=48000000
+UIAP_V006.build.flags.optimize=-Os
+UIAP_V006.build.flags.debug=-DNDEBUG
+UIAP_V006.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs
+UIAP_V006.upload.maximum_size=63488
+UIAP_V006.upload.maximum_data_size=8192
+UIAP_V006.upload.protocol=
+UIAP_V006.upload.options=
+UIAP_V006.upload.tool=uiap_v006_minichlink

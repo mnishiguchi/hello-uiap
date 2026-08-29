@@ -1,0 +1,7 @@
+# This path assumes the hello-uiap project remains at ~/Projects/uiap.
+tools.uiap_v006_minichlink.path=/home/mnishiguchi/Projects/uiap/hello-uiap/ch32fun/minichlink
+tools.uiap_v006_minichlink.cmd=minichlink
+tools.uiap_v006_minichlink.upload.pattern="{path}/{cmd}" -c 0x1209b806 -C funprog -w "{build.path}/{build.project_name}.bin" flash -b
+tools.uiap_v006_minichlink.program.pattern=
+tools.uiap_v006_minichlink.erase.pattern=
+tools.uiap_v006_minichlink.bootloader.pattern=
