@@ -44,6 +44,29 @@ If this workspace becomes Arduino-only later, this directory can be removed.
 
 Day-by-day notes about setup decisions, uploads, and test results.
 
+## Arduino IDE command
+
+On Linux, Arduino IDE can be launched from a terminal with:
+
+```sh
+arduino-ide
+```
+
+This repository's development environment uses two symbolic links:
+
+```text
+~/.local/bin/arduino-ide -> ~/Applications/arduino-ide/arduino-ide
+~/Applications/arduino-ide -> ~/Applications/arduino-ide-<version>
+```
+
+After installing a new IDE version, only update the second link:
+
+```sh
+ln -sfn "$HOME/Applications/arduino-ide-<version>" "$HOME/Applications/arduino-ide"
+```
+
+`~/.local/bin` must be included in `PATH`.
+
 ## Typical use
 
 For CH32V003 with Arduino IDE:
