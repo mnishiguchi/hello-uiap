@@ -67,6 +67,22 @@ ln -sfn "$HOME/Applications/arduino-ide-<version>" "$HOME/Applications/arduino-i
 
 `~/.local/bin` must be included in `PATH`.
 
+To install or update Arduino IDE using the official Linux ZIP release:
+
+```sh
+./scripts/install-arduino-ide.sh
+```
+
+The script installs the latest release by default. A version can be selected
+explicitly, or the planned changes can be inspected without installing:
+
+```sh
+./scripts/install-arduino-ide.sh --version 2.3.10
+./scripts/install-arduino-ide.sh --version 2.3.10 --dry-run
+```
+
+The script supports Linux x86-64 and requires `curl` and `unzip`.
+
 ## Typical use
 
 For CH32V003 with Arduino IDE:
