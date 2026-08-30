@@ -2,35 +2,37 @@
 
 ## TL;DR
 
-1. Start Arduino IDE with `arduino-ide`.
-2. Select **Tools > Board > UIAPduino > Pro Micro CH32V006 (Experimental)**.
-3. Open [`ch32v006_arduino_blink.ino`](ch32v006_arduino_blink.ino).
-4. Click **Upload**. No reset-button timing is required.
+1. `arduino-ide` で Arduino IDE を起動する。
+2. **Tools > Board > UIAPduino > Pro Micro CH32V006 (Experimental)** を選ぶ。
+3. [`ch32v006_arduino_blink.ino`](ch32v006_arduino_blink.ino) を開く。
+4. **Upload** を押す。リセットボタンのタイミング合わせは不要。
 
-The onboard LED on `PC3` repeats two short flashes followed by a pause.
+内蔵 LED は `PC3` で、短く 2 回点滅したあと少し止まるパターンを繰り返します。
 
-## Status
+## 状態
 
-This is an experimental local extension of UIAPduino core `1.0.42`. The core
-already provides Arduino support for the `CH32V006K8`; this extension exposes
-it in the board menu and uploads through the board's onboard programmer.
+これは UIAPduino core `1.0.42` に対する実験的なローカル拡張です。core 自体は
+すでに `CH32V006K8` の Arduino 対応を含んでいますが、この拡張でボードメニュー
+から選べるようにし、オンボード書き込み器経由でアップロードできるようにしてい
+ます。
 
-The official UIAP V1.1 documentation does not currently support Arduino IDE.
-Basic GPIO and timing are tested here; other Arduino APIs and libraries may
-still need validation.
+公式の UIAP V1.1 ドキュメントでは、現時点で Arduino IDE はサポート対象外です。
+このリポジトリで確認できているのは、基本的な GPIO とタイミング処理です。その他
+の Arduino API やライブラリは、個別に検証が必要です。
 
-## Install the local extension
+## ローカル拡張の導入
 
-Copy the files from [`../arduino_support`](../arduino_support) into the matching
-UIAP core directory in your Arduino data folder:
+[`../arduino_support`](../arduino_support) のファイルを、Arduino データディレクトリ
+内の対応する UIAP core ディレクトリへコピーします。
 
 ```text
 <arduino-data>/packages/UIAP/hardware/ch32v/1.0.42/
 ```
 
-On Linux, `<arduino-data>` is typically `~/.arduino15`.
+Linux では `<arduino-data>` は通常 `~/.arduino15` です。
 
-## After updating the UIAPduino board package
+## UIAPduino ボードパッケージ更新後
 
-A Boards Manager update may replace the local board entry. Reapply the files
-kept in `arduino_support/` from this project, then restart Arduino IDE.
+Boards Manager で更新すると、ローカル追加したボード定義が上書きされることがあり
+ます。その場合は、このプロジェクトの `arduino_support/` を再適用してから
+Arduino IDE を再起動します。

@@ -1,57 +1,55 @@
 # CH32V003 Arduino Blink
 
-Concise Arduino IDE setup for the UIAPduino Pro Micro CH32V003 V1.4.
+UIAPduino Pro Micro CH32V003 V1.4 向けの、簡潔な Arduino IDE セットアップ
+手順です。
 
 ## TL;DR
 
-1. Start Arduino IDE with `arduino-ide`.
-2. Select **Tools > Board > UIAPduino > Pro Micro CH32V003**.
-3. Open [`ch32v003_arduino_blink.ino`](ch32v003_arduino_blink.ino).
-4. First upload: disconnect USB, hold reset while reconnecting, release reset,
-   then click **Upload**.
-5. Later uploads: leave USB connected, press reset, click **Upload**, then press
-   reset again to run.
+1. `arduino-ide` で Arduino IDE を起動する。
+2. **Tools > Board > UIAPduino > Pro Micro CH32V003** を選ぶ。
+3. [`ch32v003_arduino_blink.ino`](ch32v003_arduino_blink.ino) を開く。
+4. 初回書き込みでは USB を抜き、リセットを押したまま再接続し、リセットを離してから **Upload** を押す。
+5. 2 回目以降は USB をつないだまま、リセット、**Upload**、書き込み後にもう一度リセット。
 
-Success is reported as `Image written.`. The orange LED should blink.
+成功時は `Image written.` と表示され、オレンジ LED が点滅します。
 
-## Tested with
+## 動作確認環境
 
 - Arduino IDE 2.3.10
 - UIAPduino package 1.0.42
 - UIAPduino Pro Micro CH32V003 V1.4
 
-The built-in orange LED is pin `2`.
+内蔵オレンジ LED はピン `2` です。
 
-## One-time setup
+## 最初に一度だけやること
 
-### 1. Install Arduino IDE
+### 1. Arduino IDE を入れる
 
-Install Arduino IDE by your preferred method. The official download is on the
-[Arduino software page](https://www.arduino.cc/en/software).
+好みの方法で Arduino IDE を導入します。公式配布ページは
+[Arduino software page](https://www.arduino.cc/en/software) です。
 
-Examples below assume Arduino IDE can be started with:
+以下の説明では、次のコマンドで起動できる前提です。
 
 ```bash
 arduino-ide
 ```
 
-### 2. Install the UIAPduino board package
+### 2. UIAPduino ボードパッケージを入れる
 
-1. Open **File > Preferences** and add this **Additional boards manager URL**:
+1. **File > Preferences** を開き、**Additional boards manager URL** に次を追加する。
 
    ```text
    https://github.com/YuukiUmeta-UIAP/board_manager_files/raw/main/package_uiap.jp_index.json
    ```
 
-2. Open **Tools > Board > Boards Manager**, search for `uiap`, and install
-   **UIAPduino**.
-3. Select **Tools > Board > UIAPduino > Pro Micro CH32V003**.
+2. **Tools > Board > Boards Manager** を開き、`uiap` で検索して **UIAPduino** をインストールする。
+3. **Tools > Board > UIAPduino > Pro Micro CH32V003** を選ぶ。
 
-Keep all other board options at their defaults.
+そのほかのボード設定は、基本的にデフォルトのままで構いません。
 
-### 3. Configure Linux USB access
+### 3. Linux の USB 権限を整える
 
-On Linux, install the manufacturer's udev rule:
+Linux では、メーカー配布の udev ルールを入れます。
 
 ```bash
 sudo wget -O /etc/udev/rules.d/99-minichlink-uiap.rules \
@@ -61,15 +59,15 @@ sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
 
-Log out and back in after joining `plugdev`.
+`plugdev` に追加した後は、いったんログアウトしてログインし直します。
 
-## Blink sketch
+## Blink スケッチ
 
 ```cpp
 #define LED_BUILTIN 2
 
 void setup() {
-  // Let reset alternate between run and USB write-standby modes.
+  // リセット時に run モードと USB write-standby モードを切り替えられるようにする。
   if (FLASH->STATR & (1 << 14)) NVIC_SystemReset();
   SystemReset_StartMode(Start_Mode_BOOT);
   pinMode(PD4, OUTPUT);
@@ -85,47 +83,43 @@ void loop() {
 }
 ```
 
-The three lines at the start of `setup()` enable UIAPduino's Seamless Switch.
-Keep them in future sketches if you want reset-only mode switching.
+`setup()` の先頭 3 行は、UIAPduino の Seamless Switch を有効にするための初期化
+です。今後も「USB の抜き差しなしで、リセットだけで書き込み待機に入る」運用を
+したいなら残しておきます。
 
-## Upload
+## 書き込み
 
-### First upload
+### 初回書き込み
 
-1. Click **Verify** and wait for compilation to finish.
-2. Disconnect USB.
-3. Hold reset while reconnecting USB, then immediately release reset.
-4. Click **Upload** promptly.
-5. Wait for `Image written.`.
-6. Press reset once to run the sketch.
+1. **Verify** を押してコンパイルを終える。
+2. USB を抜く。
+3. リセットを押したまま USB を挿し直し、すぐリセットを離す。
+4. すぐ **Upload** を押す。
+5. `Image written.` が出るまで待つ。
+6. 1 回リセットしてスケッチを実行する。
 
-### Later uploads
+### 2 回目以降
 
-1. Keep USB connected.
-2. Press reset once to enter write-standby mode.
-3. Click **Upload**.
-4. Wait for `Image written.`.
-5. Press reset once to run the new sketch.
+1. USB はつないだままにする。
+2. 1 回リセットして write-standby モードに入る。
+3. **Upload** を押す。
+4. `Image written.` が出るまで待つ。
+5. 1 回リセットして新しいスケッチを実行する。
 
-Seamless Switch removes cable reconnection; it does not remove the reset
-presses.
+Seamless Switch で不要になるのは USB の抜き差しだけです。リセット操作自体は、
+書き込み前と実行開始時に引き続き必要です。
 
-## Tips and FAQ
+## Tips / FAQ
 
-- **IDE says "not connected":** Expected. Upload uses USB HID and `minichlink`,
-  not a serial port. Do not select a `/dev/tty*` port.
-- **"Could not initialize any supported programmers":** Click **Verify**
-  first, enter write-standby mode, then click **Upload** promptly.
-- **USB error `-71`:** Try a short data cable, another USB port, or a USB 2.0
-  hub.
-- **Reconnect USB every time?** Only after flashing a sketch without the
-  Seamless Switch lines. Otherwise use reset.
-- **Serial Monitor:** USB serial is not available by default. Use a separate
-  USB-to-serial adapter on the UART pins for `Serial.print()`.
-- Connect only one UIAPduino waiting for upload.
-- If upload succeeds but the sketch does not start, press reset once.
+- **IDE に "not connected" と出る:** 正常です。書き込みはシリアルポートではなく USB HID と `minichlink` を使います。`/dev/tty*` は選ばなくて構いません。
+- **"Could not initialize any supported programmers" が出る:** 先に **Verify** を済ませてから write-standby モードに入り、すぐ **Upload** を押します。
+- **USB error `-71`:** 短いデータ対応ケーブル、別の USB ポート、または USB 2.0 ハブを試します。
+- **毎回 USB を抜き差しする必要はあるか:** Seamless Switch の 3 行入りスケッチを書き込んだ後は不要です。以後はリセットで足ります。
+- **Serial Monitor は使えるか:** デフォルトでは USB シリアルはありません。`Serial.print()` を見たいなら UART ピンへ別の USB-シリアル変換器をつなぎます。
+- 書き込み待機中の UIAPduino は 1 台だけ接続する。
+- 書き込み成功後にスケッチが始まらない場合は、1 回リセットする。
 
-## References
+## 参考
 
 - [Official UIAPduino V1.4 guide](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4)
 - [Arduino IDE downloads](https://www.arduino.cc/en/software)

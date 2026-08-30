@@ -1,19 +1,20 @@
 # Experimental CH32V006 Arduino Support
 
-These files document the local extension applied to UIAPduino core `1.0.42`:
+このディレクトリのファイルは、UIAPduino core `1.0.42` に対してローカルで
+加えている拡張内容を説明します。
 
-- `boards.local.txt`: additional board definition loaded by Arduino
-- `platform.local.txt`: V006 upload command using the project's `minichlink`
+- `boards.local.txt`: Arduino が読み込む追加ボード定義
+- `platform.local.txt`: このプロジェクトの `minichlink` を使う V006 用書き込み設定
 
-Install these files into the matching UIAP core directory in your Arduino data
-folder:
+これらのファイルは、Arduino のデータディレクトリ内にある対応する UIAP core
+ディレクトリへ配置します。
 
 ```text
 <arduino-data>/packages/UIAP/hardware/ch32v/1.0.42/
 ```
 
-On Linux, `<arduino-data>` is typically `~/.arduino15`.
+Linux では `<arduino-data>` は通常 `~/.arduino15` です。
 
-Arduino Boards Manager may replace the customization when the UIAPduino package
-is updated. Review the new package before reapplying it because the core version
-or upload support may have changed.
+UIAPduino パッケージを Boards Manager で更新すると、このローカル拡張が上書き
+されることがあります。再適用する前に、新しいパッケージ側で core のバージョン
+や書き込み手順が変わっていないか確認してください。

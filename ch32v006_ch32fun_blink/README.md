@@ -2,32 +2,33 @@
 
 ## TL;DR
 
-From this directory:
+このディレクトリで次を実行します。
 
 ```sh
 make
 make flash
 ```
 
-The built-in LED on `PC3` should repeat two short flashes followed by a pause.
-No reset-button timing is required.
+内蔵 LED `PC3` が、短く 2 回点滅したあと少し止まるパターンを繰り返せば成功です。
+リセットボタンのタイミング合わせは不要です。
 
-## Prerequisites
+## 前提
 
-- UIAPduino Pro Micro CH32V006 V1.1 connected by USB
-- `riscv64-unknown-elf-gcc`, `make`, `libusb`, and `libudev`
-- A current `ch32fun` checkout at `../ch32fun`
-- A built `../ch32fun/minichlink/minichlink`
+- UIAPduino Pro Micro CH32V006 V1.1 を USB 接続している
+- `riscv64-unknown-elf-gcc`, `make`, `libusb`, `libudev` が入っている
+- `../ch32fun` に現行の `ch32fun` checkout がある
+- `../ch32fun/minichlink/minichlink` がビルド済み
 
-Build minichlink after cloning or updating ch32fun:
+`ch32fun` を clone 直後または更新直後に使う場合は、先に `minichlink` をビルド
+します。
 
 ```sh
 make -C ../ch32fun/minichlink
 ```
 
-## Build and upload
+## ビルドと書き込み
 
-From the repository root:
+リポジトリ直下から:
 
 ```sh
 cd ch32v006_ch32fun_blink
@@ -35,33 +36,34 @@ make
 make flash
 ```
 
-The Makefile selects `CH32V006` and explicitly targets the board's onboard
-programmer with USB ID `1209:b806`.
+Makefile では `CH32V006` を選び、USB ID `1209:b806` のオンボード書き込み器を
+明示的に使うようにしています。
 
-## Tips and FAQ
+## Tips / FAQ
 
-### Can I use Arduino IDE?
+### Arduino IDE は使えるか
 
-The official V006 V1.1 documentation lists Arduino IDE and PlatformIO as
-unsupported. This project also contains an experimental local Arduino setup at
-`../ch32v006_arduino_blink`; keep this ch32fun version as the supported fallback.
+公式の V006 V1.1 ドキュメントでは、Arduino IDE と PlatformIO は未対応です。
+このリポジトリには、実験用の Arduino 版として `../ch32v006_arduino_blink` も
+ありますが、確実に戻れる基準線としてはこの `ch32fun` 版を残しておくのが無難
+です。
 
-### Do I need to press reset before uploading?
+### 書き込み前にリセットは必要か
 
-No. The onboard programmer flashes the V006 directly.
+不要です。オンボード書き込み器が V006 へ直接書き込みます。
 
-### Which pin is the built-in LED?
+### 内蔵 LED はどのピンか
 
-`PC3`. Do not adapt the stock ch32fun blink example without reviewing it: that
-example also drives `PC0`, which must not be used on this UIAPduino board because
-it can reset or disable the onboard V003 debugger.
+`PC3` です。stock の `ch32fun` blinky をそのまま流用するのは避けてください。
+あの例は `PC0` も触りますが、この UIAPduino ボードでは `PC0` がオンボード V003
+デバッガに干渉し、リセットや無効化を引き起こす可能性があります。
 
-### Why two short flashes?
+### なぜ 2 回点滅なのか
 
-The board's factory firmware already blinks at a steady 250 ms rate. The custom
-pattern makes a successful upload immediately obvious.
+工場出荷時ファームウェアは一定間隔の点滅です。独自パターンにしておくと、書き
+込み成功が見た目ですぐ分かります。
 
-### Upload is unreliable
+### 書き込みが不安定
 
-Use a known-good data cable, preferably 1 m or shorter, and connect it directly
-to the host before trying a hub.
+1 m 以下の短いデータ対応ケーブルを優先し、まずはハブなしでホストへ直結して試し
+ます。
