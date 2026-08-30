@@ -1,113 +1,33 @@
 # hello-uiap
 
-UIAP ボード向けの小さな動作確認プロジェクトと作業メモです。
+UIAPduino ボードの基本動作を確認するための Blink サンプルと作業記録です。
 
 ## TL;DR
 
-- `ch32v003_arduino_blink`: CH32V003 向けの Arduino IDE blinky。詳細は各ディレクトリの `README.md`
-- `ch32v006_arduino_blink`: CH32V006 向けの Arduino IDE blinky
-- `ch32v006_ch32fun_blink`: CH32V006 向けの `ch32fun` ベース最小 blinky
-- `ch32fun`: V006 プロジェクトで使っている upstream ツールキット
-- `worklog`: 日付ごとのセットアップ記録と実験メモ
-- `scripts`: Arduino IDE の導入を補助するスクリプト
+| やりたいこと | 入口 |
+| --- | --- |
+| CH32V003 を Arduino IDE で試す | [`ch32v003_arduino_blink/`](ch32v003_arduino_blink/) |
+| CH32V006 を Arduino IDE で試す | [`ch32v006_arduino_blink/`](ch32v006_arduino_blink/) |
+| CH32V006 を `ch32fun` で試す | [`ch32v006_ch32fun_blink/`](ch32v006_ch32fun_blink/) |
 
-## ディレクトリ概要
+初めての場合は、公式の UIAPduino ボードパッケージで使える CH32V003 の
+Arduino サンプルから始めるのが簡単です。CH32V006 の Arduino 対応はローカル拡張
+を使う実験的な構成です。
 
-### `ch32v003_arduino_blink`
+## クイックスタート
 
-UIAP CH32V003 ボード向けの Arduino スケッチです。Arduino IDE と
-UIAPduino ボードパッケージを使う、いちばん素直な入り口です。
-
-### `ch32v006_ch32fun_blink`
-
-UIAP CH32V006 ボード向けの最小 C blinky です。Arduino IDE は使わず、
-`ch32fun` と `minichlink` でビルドと書き込みを行います。
-
-### `ch32v006_arduino_blink`
-
-UIAP CH32V006 ボード向けの Arduino スケッチです。インストール済み core
-に含まれている V006 サポートと、`arduino_support/` に置いたローカル拡張
-を使います。
-
-### `ch32fun`
-
-upstream の CH32 開発ツールキットをローカルに置いたものです。
-
-このディレクトリがある理由:
-
-- ヘッダやビルドファイルが必要
-- `minichlink` 書き込みツールを使う
-- CH32 系の参考実装を参照できる
-
-将来この作業場が Arduino 専用になれば、ここは不要になる可能性があります。
-
-### `worklog`
-
-セットアップ判断、書き込み手順、テスト結果を日付ごとに残したメモです。
-
-### `scripts`
-
-Linux 用 Arduino IDE の導入や更新を楽にする補助スクリプトです。
-
-## Arduino IDE コマンド
-
-Linux では、Arduino IDE はターミナルから次で起動できます。
+Arduino サンプルは IDE を起動し、対象ディレクトリの `.ino` ファイルを開きます。
 
 ```sh
 arduino-ide
 ```
 
-このリポジトリでは、次の 2 本のシンボリックリンクを前提にしています。
+ボードの選択や書き込み手順は、各サンプルの README を参照してください。
 
-```text
-~/.local/bin/arduino-ide -> ~/Applications/arduino-ide/arduino-ide
-~/Applications/arduino-ide -> ~/Applications/arduino-ide-<version>
-```
+- [CH32V003 Arduino Blink](ch32v003_arduino_blink/README.md)
+- [CH32V006 Arduino Blink](ch32v006_arduino_blink/README.md)
 
-新しい IDE を入れたら、更新すべきなのは 2 本目だけです。
-
-```sh
-ln -sfn "$HOME/Applications/arduino-ide-<version>" "$HOME/Applications/arduino-ide"
-```
-
-`~/.local/bin` が `PATH` に入っている必要があります。
-
-公式 Linux ZIP 版の Arduino IDE を導入または更新するには:
-
-```sh
-./scripts/install-arduino-ide.sh
-```
-
-デフォルトでは最新版を入れます。バージョン指定や dry-run も可能です。
-
-```sh
-./scripts/install-arduino-ide.sh --version 2.3.10
-./scripts/install-arduino-ide.sh --version 2.3.10 --dry-run
-```
-
-このスクリプトは Linux x86-64 向けで、`curl` と `unzip` が必要です。
-
-## よく使う流れ
-
-CH32V003 を Arduino IDE で触る場合:
-
-```sh
-arduino-ide
-```
-
-開くファイル:
-
-```text
-ch32v003_arduino_blink/ch32v003_arduino_blink.ino
-```
-
-手順書:
-
-```text
-ch32v003_arduino_blink/README.md
-```
-
-CH32V006 を `ch32fun` で触る場合は、リポジトリ直下から:
+CH32V006 を `ch32fun` でビルド、書き込みする場合:
 
 ```sh
 cd ch32v006_ch32fun_blink
@@ -115,14 +35,52 @@ make
 make flash
 ```
 
-CH32V006 を Arduino IDE で触る場合:
+詳しくは [CH32V006 ch32fun Blink](ch32v006_ch32fun_blink/README.md) を参照してください。
 
-```sh
-arduino-ide
-```
+## 動作確認した開発環境
 
-開くファイル:
+- ホスト: LMDE 7 (x86-64)
+- Arduino IDE: 2.3.10、公式 Linux ZIP 版
+- UIAPduino ボードパッケージ: 1.0.42
+- ボード: UIAPduino Pro Micro CH32V003 V1.4 / CH32V006 V1.1
+- 書き込み: USB HID 経由の `minichlink`
+
+これは動作確認に使った環境であり、必須条件ではありません。
+
+## Arduino IDE の導入
+
+この環境では Arduino IDE を `~/Applications` に置き、`arduino-ide` コマンドで
+起動できるようにしています。
 
 ```text
-ch32v006_arduino_blink/ch32v006_arduino_blink.ino
+~/.local/bin/arduino-ide -> ~/Applications/arduino-ide/arduino-ide
+~/Applications/arduino-ide -> ~/Applications/arduino-ide-<version>
 ```
+
+公式 Linux ZIP 版をこの構成で導入または更新する補助スクリプトがあります。
+
+```sh
+./scripts/install-arduino-ide.sh
+```
+
+バージョン指定や、変更せずに処理内容を確認する dry-run も可能です。
+
+```sh
+./scripts/install-arduino-ide.sh --version 2.3.10
+./scripts/install-arduino-ide.sh --version 2.3.10 --dry-run
+```
+
+対応環境は Linux x86-64 で、`curl` と `unzip` が必要です。また、
+`~/.local/bin` を `PATH` に含めてください。
+
+## リポジトリ構成
+
+- `ch32v003_arduino_blink/`: CH32V003 用 Arduino Blink
+- `ch32v006_arduino_blink/`: CH32V006 用 Arduino Blink（実験的）
+- `ch32v006_ch32fun_blink/`: CH32V006 用の最小 C Blink
+- `arduino_support/`: CH32V006 を Arduino IDE から使うためのローカル拡張
+- `ch32fun/`: CH32V006 のビルドと書き込みに使う upstream ツールキット
+- `scripts/`: Arduino IDE の導入補助スクリプト
+- `worklog/`: セットアップ、判断、実機テストの記録
+
+`ch32fun/` はヘッダ、ビルド設定、`minichlink`、参考実装を提供します。
