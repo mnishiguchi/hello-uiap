@@ -1,12 +1,14 @@
 # hello-uiap
 
-UIAPduino ボードの基本動作を確認するための Blink サンプルと作業記録です。
+UIAPduino ボードの動作を確認するための Arduino サンプル、ミニゲーム、
+作業記録です。
 
 ## TL;DR
 
 | やりたいこと | 入口 |
 | --- | --- |
 | CH32V003 を Arduino IDE で試す | [`ch32v003_arduino_blink/`](ch32v003_arduino_blink/) |
+| CH32V003 でミニゲームを試す | [`ch32v003_arduino_game/`](ch32v003_arduino_game/) |
 | CH32V006 を Arduino IDE で試す | [`ch32v006_arduino_blink/`](ch32v006_arduino_blink/) |
 | CH32V006 を `ch32fun` で試す | [`ch32v006_ch32fun_blink/`](ch32v006_ch32fun_blink/) |
 
@@ -25,6 +27,7 @@ arduino-ide
 ボードの選択や書き込み手順は、各サンプルの README を参照してください。
 
 - [CH32V003 Arduino Blink](ch32v003_arduino_blink/README.md)
+- [CH32V003 Arduino Mini Game](ch32v003_arduino_game/README.md)
 - [CH32V006 Arduino Blink](ch32v006_arduino_blink/README.md)
 
 CH32V006 を `ch32fun` でビルド、書き込みする場合:
@@ -76,6 +79,7 @@ make flash
 ## リポジトリ構成
 
 - `ch32v003_arduino_blink/`: CH32V003 用 Arduino Blink
+- `ch32v003_arduino_game/`: CH32V003 用 Arduino ミニゲーム
 - `ch32v006_arduino_blink/`: CH32V006 用 Arduino Blink（実験的）
 - `ch32v006_ch32fun_blink/`: CH32V006 用の最小 C Blink
 - `arduino_support/`: CH32V006 を Arduino IDE から使うためのローカル拡張
