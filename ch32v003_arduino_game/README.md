@@ -12,6 +12,11 @@ UIAPduino Pro Micro CH32V003 V1.4、128×64 I2C OLED、3 ボタン、
 - 圧電ブザー × 1
 - ブレッドボード
 
+購入候補と費用:
+
+- [秋月電子でそろえる部品](docs/parts-akizuki.md)
+- [スイッチサイエンスでそろえる部品](docs/parts-switch-science.md)
+
 ## 遊び方
 
 起動後に ACTION を押すとゲームが始まります。
