@@ -4,6 +4,10 @@ UIAPduino Pro Micro CH32V003 V1.4、128×64 I2C OLED、3 ボタン、
 圧電ブザーで動く、落下物を避けるミニゲームです。実機でコンパイル、書き込み、
 表示、入力、サウンドまで動作確認しています。
 
+[![実機で動作する CH32V003 ミニゲーム](docs/assets/hardware-build.jpg)](docs/assets/gameplay-demo.mp4)
+
+画像をクリックすると、実機でゲームを操作している約 8 秒の動画を再生できます。
+
 ## 構成
 
 - UIAPduino Pro Micro CH32V003 V1.4
@@ -30,6 +34,8 @@ UIAPduino Pro Micro CH32V003 V1.4、128×64 I2C OLED、3 ボタン、
 - 衝突すると低い音が鳴り、画面に枠が表示される
 
 ## 配線
+
+![UIAPduino CH32V003 Mini Game の配線図](docs/assets/wiring-guide.svg)
 
 | UIAPduino | GPIO | 配線色 | 接続先 |
 | --- | --- | --- | --- |
@@ -112,6 +118,9 @@ pinMode(10, INPUT_PULLUP);  // ACTION / PD0
  MISO / D9    │ PC7      D10 │ PD0
               └──────────────┘
 ```
+
+この配置は [UIAPduino Pro Micro CH32V003 V1.4 の公式ピンアウト](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4)
+と UIAPduino Arduino core `1.0.42` のピン定義に照合しています。
 
 このゲームで使う信号ピンは次の 6 本です。
 
