@@ -52,29 +52,8 @@ make flash
 
 ## Arduino IDE の導入
 
-この環境では Arduino IDE を `~/Applications` に置き、`arduino-ide` コマンドで
-起動できるようにしています。
-
-```text
-~/.local/bin/arduino-ide -> ~/Applications/arduino-ide/arduino-ide
-~/Applications/arduino-ide -> ~/Applications/arduino-ide-<version>
-```
-
-公式 Linux ZIP 版をこの構成で導入または更新する補助スクリプトがあります。
-
-```sh
-./scripts/install-arduino-ide.sh
-```
-
-バージョン指定や、変更せずに処理内容を確認する dry-run も可能です。
-
-```sh
-./scripts/install-arduino-ide.sh --version 2.3.10
-./scripts/install-arduino-ide.sh --version 2.3.10 --dry-run
-```
-
-対応環境は Linux x86-64 で、`curl` と `unzip` が必要です。また、
-`~/.local/bin` を `PATH` に含めてください。
+Arduino IDE は環境に合った方法で導入してください。公式配布版は
+[Arduino Software](https://www.arduino.cc/en/software/) から入手できます。
 
 ## リポジトリ構成
 
@@ -84,7 +63,6 @@ make flash
 - `ch32v006_ch32fun_blink/`: CH32V006 用の最小 C Blink
 - `arduino_support/`: CH32V006 を Arduino IDE から使うためのローカル拡張
 - `ch32fun/`: CH32V006 のビルドと書き込みに使う upstream ツールキット
-- `scripts/`: Arduino IDE の導入補助スクリプト
 - `worklog/`: セットアップ、判断、実機テストの記録
 
 `ch32fun/` はヘッダ、ビルド設定、`minichlink`、参考実装を提供します。
