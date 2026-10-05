@@ -1,0 +1,327 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ARDUINO_CLI=${ARDUINO_CLI:-arduino-cli}
+SKETCHBOOK=${ARDUINO_SKETCHBOOK:-"$HOME/Arduino"}
+
+UIAP_HID_URL='https://github.com/tarosay/board_manager_files/raw/main/package_uiap_hid_index.json'
+
+BOARD_NAME=''
+CORE=''
+FQBN=''
+SUPPORTED=''
+MENU_CHOICE=''
+
+require_command() {
+  command -v "$1" >/dev/null 2>&1 || {
+    printf 'Error: required command not found: %s\n' "$1" >&2
+    exit 1
+  }
+}
+
+pause() {
+  printf '\nPress Enter to continue... '
+  read -r _ || true
+}
+
+choose_menu() {
+  local title=$1
+  shift
+
+  local -a options=("$@")
+  local answer
+  local choice
+  local index
+
+  printf '\n== %s ==\n\n' "$title" >&2
+
+  for ((index = 0; index < ${#options[@]}; index++)); do
+    printf '  %d) %s\n' "$((index + 1))" "${options[index]}" >&2
+  done
+
+  while true; do
+    printf '\nSelect [1-%d]: ' "${#options[@]}" >&2
+
+    if ! read -r answer; then
+      printf '\n' >&2
+      return 1
+    fi
+
+    if [[ "$answer" =~ ^[0-9]+$ ]]; then
+      choice=$((10#$answer))
+
+      if ((choice >= 1 && choice <= ${#options[@]})); then
+        MENU_CHOICE=$choice
+        return 0
+      fi
+    fi
+
+    printf 'Please enter a number from 1 to %d.\n' \
+      "${#options[@]}" >&2
+  done
+}
+
+choose_board() {
+  choose_menu 'Select a UIAPduino board' \
+    'Pro Micro CH32V003 V1.4' \
+    'Pro Micro CH32V006 V1.1 Beta (not yet supported)' \
+    'Quit' || exit 0
+
+  case "$MENU_CHOICE" in
+  1)
+    BOARD_NAME='UIAPduino Pro Micro CH32V003 V1.4'
+    CORE='UIAP_HID:ch32v'
+    FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+    SUPPORTED=true
+    ;;
+  2)
+    BOARD_NAME='UIAPduino Pro Micro CH32V006 V1.1 Beta'
+    CORE=''
+    FQBN=''
+    SUPPORTED=false
+    ;;
+  3)
+    exit 0
+    ;;
+  esac
+}
+
+core_is_installed() {
+  [[ -n "$CORE" ]] || return 1
+
+  "$ARDUINO_CLI" core list |
+    awk 'NR > 1 { print $1 }' |
+    grep -Fxq "$CORE"
+}
+
+setup_board() {
+  if [[ "$SUPPORTED" != true ]]; then
+    printf '\n%s is not currently supported by this Arduino CLI workflow.\n' \
+      "$BOARD_NAME"
+    printf 'Current UIAP documentation uses ch32fun/minichlink for V006.\n'
+    return 0
+  fi
+
+  printf '\nSetting up %s...\n' "$BOARD_NAME"
+
+  if ! "$ARDUINO_CLI" config dump |
+    grep -Fq "$UIAP_HID_URL"; then
+    printf 'Adding UIAPduino board package URL...\n'
+
+    "$ARDUINO_CLI" config add \
+      board_manager.additional_urls \
+      "$UIAP_HID_URL" || return
+  else
+    printf 'Board package URL already configured.\n'
+  fi
+
+  printf 'Updating board package indexes...\n'
+  "$ARDUINO_CLI" core update-index || return
+
+  if core_is_installed; then
+    printf 'Core already installed: %s\n' "$CORE"
+  else
+    printf 'Installing core: %s\n' "$CORE"
+    "$ARDUINO_CLI" core install "$CORE" || return
+  fi
+
+  printf '\nBoard support is ready.\n'
+}
+
+choose_sketch() {
+  local -a sketches=()
+  local -a labels=()
+  local sketch
+
+  [[ -d "$SKETCHBOOK" ]] || {
+    printf 'Sketchbook not found: %s\n' "$SKETCHBOOK" >&2
+    return 1
+  }
+
+  # Find sketches while excluding installed libraries and custom hardware.
+  mapfile -t sketches < <(
+    find "$SKETCHBOOK" \
+      \( \
+      -path "$SKETCHBOOK/libraries" -o \
+      -path "$SKETCHBOOK/hardware" \
+      \) -prune -o \
+      -type f \
+      -name '*.ino' \
+      -printf '%h\n' |
+      sort -u
+  )
+
+  if ((${#sketches[@]} == 0)); then
+    printf 'No sketches found under %s\n' "$SKETCHBOOK" >&2
+    return 1
+  fi
+
+  for sketch in "${sketches[@]}"; do
+    labels+=("${sketch#"$SKETCHBOOK"/}")
+  done
+
+  labels+=('Cancel')
+
+  choose_menu 'Select a sketch' "${labels[@]}" || return 1
+
+  if ((MENU_CHOICE == ${#labels[@]})); then
+    return 1
+  fi
+
+  # Menu output goes to stderr, so stdout contains only the selected path.
+  printf '%s\n' "${sketches[MENU_CHOICE - 1]}"
+}
+
+ensure_core_installed() {
+  if ! core_is_installed; then
+    printf \
+      'Board support is not installed. Choose "Set up board support" first.\n' \
+      >&2
+    return 1
+  fi
+}
+
+verify_sketch() {
+  local sketch=$1
+  local sketch_label=${sketch#"$SKETCHBOOK"/}
+
+  ensure_core_installed || return
+
+  printf '\n== Verify ==\n\n'
+  printf 'Board  : %s\n' "$BOARD_NAME"
+  printf 'Sketch : %s\n\n' "$sketch_label"
+
+  "$ARDUINO_CLI" compile \
+    --fqbn "$FQBN" \
+    "$sketch"
+}
+
+prepare_v003_upload() {
+  printf '\n== Prepare the V003 for upload ==\n\n'
+  printf '  1. Disconnect the USB cable.\n'
+  printf '  2. Hold the board button while reconnecting USB.\n'
+  printf '  3. Release the button immediately.\n'
+  printf '\n'
+  printf 'The V003 bootloader uses USB HID; no serial port needs to be selected.\n'
+  printf '\nPress Enter when the board is ready: '
+
+  read -r _
+}
+
+upload_sketch() {
+  local sketch=$1
+  local sketch_label=${sketch#"$SKETCHBOOK"/}
+
+  # Match Arduino IDE behavior:
+  # Upload first verifies/compiles the sketch, then flashes it.
+  verify_sketch "$sketch" || return
+
+  prepare_v003_upload || return
+
+  printf '\n== Upload ==\n\n'
+  printf 'Board  : %s\n' "$BOARD_NAME"
+  printf 'Sketch : %s\n\n' "$sketch_label"
+
+  "$ARDUINO_CLI" upload \
+    --fqbn "$FQBN" \
+    "$sketch"
+}
+
+run_and_report() {
+  if ! "$@"; then
+    printf '\nAction failed. Review the message above and try again.\n' >&2
+    return 1
+  fi
+}
+
+board_menu() {
+  local sketch=''
+  local selected_sketch
+
+  while true; do
+    printf '\n----------------------------------------\n'
+    printf 'Board  : %s\n' "$BOARD_NAME"
+
+    if [[ -n "$sketch" ]]; then
+      printf 'Sketch : %s\n' "${sketch#"$SKETCHBOOK"/}"
+    else
+      printf 'Sketch : (none)\n'
+    fi
+
+    printf '%s\n' '----------------------------------------'
+
+    choose_menu 'Actions' \
+      'Set up board support' \
+      'Choose a sketch' \
+      'Verify the selected sketch' \
+      'Upload the selected sketch' \
+      'Choose another board' \
+      'Quit' || exit 0
+
+    case "$MENU_CHOICE" in
+    1)
+      run_and_report setup_board || true
+      pause
+      ;;
+
+    2)
+      if selected_sketch=$(choose_sketch); then
+        sketch=$selected_sketch
+      fi
+      ;;
+
+    3)
+      if [[ "$SUPPORTED" != true ]]; then
+        printf '\nArduino CLI workflow is not supported for %s.\n' \
+          "$BOARD_NAME"
+      elif [[ -z "$sketch" ]]; then
+        printf '\nSelect a sketch first.\n'
+      else
+        run_and_report verify_sketch "$sketch" || true
+      fi
+
+      pause
+      ;;
+
+    4)
+      if [[ "$SUPPORTED" != true ]]; then
+        printf '\nArduino CLI workflow is not supported for %s.\n' \
+          "$BOARD_NAME"
+      elif [[ -z "$sketch" ]]; then
+        printf '\nSelect a sketch first.\n'
+      else
+        run_and_report upload_sketch "$sketch" || true
+      fi
+
+      pause
+      ;;
+
+    5)
+      return
+      ;;
+
+    6)
+      exit 0
+      ;;
+    esac
+  done
+}
+
+main() {
+  require_command "$ARDUINO_CLI"
+  require_command find
+  require_command sort
+  require_command awk
+  require_command grep
+
+  printf '\nUIAPduino command-line utility\n'
+  printf 'Arduino CLI : %s\n' "$ARDUINO_CLI"
+  printf 'Sketchbook  : %s\n' "$SKETCHBOOK"
+
+  while true; do
+    choose_board
+    board_menu
+  done
+}
+
+main "$@"
