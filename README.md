@@ -10,11 +10,26 @@ UIAPduino ボードの動作を確認するための Arduino サンプル、ミ�
 | CH32V003 を Arduino IDE で試す | [Blink](sketches/ch32v003_blink/) |
 | CH32V003 でミニゲームを試す | [ミニゲーム](sketches/ch32v003_game/) |
 | CH32V006 を Arduino IDE で試す | [Blink（実験的）](sketches/ch32v006_blink/) |
-| CH32V006 を `ch32fun` で試す | [`ch32fun` Blink](ch32v006_ch32fun_blink/) |
+| CH32V006 を `ch32fun` で試す | [`ch32fun` Blink](ch32fun_projects/ch32v006_blink/) |
 
 初めての場合は、公式の UIAPduino ボードパッケージで使える CH32V003 の
 Arduino サンプルから始めるのが簡単です。CH32V006 の Arduino 対応はローカル拡張
 を使う実験的な構成です。
+
+## リポジトリの取得
+
+`ch32fun` を含めて clone します。
+
+```sh
+git clone --recurse-submodules https://github.com/mnishiguchi/hello-uiap.git
+cd hello-uiap
+```
+
+すでに clone 済みの場合:
+
+```sh
+git submodule update --init --recursive
+```
 
 ## クイックスタート
 
@@ -46,12 +61,12 @@ uiapduino
 CH32V006 を `ch32fun` でビルド、書き込みする場合:
 
 ```sh
-cd ch32v006_ch32fun_blink
+cd ch32fun_projects/ch32v006_blink
 make
 make flash
 ```
 
-詳しくは [CH32V006 ch32fun Blink](ch32v006_ch32fun_blink/README.md) を参照してください。
+詳しくは [CH32V006 ch32fun Blink](ch32fun_projects/ch32v006_blink/README.md) を参照してください。
 
 ## 動作確認した開発環境
 
@@ -74,10 +89,12 @@ Arduino IDE は環境に合った方法で導入してください。公式配�
   - `ch32v003_blink/`: CH32V003 用 Blink
   - `ch32v003_game/`: CH32V003 用ミニゲーム
   - `ch32v006_blink/`: CH32V006 用 Blink（実験的）
-- `ch32v006_ch32fun_blink/`: CH32V006 用の最小 C Blink
+- `ch32fun_projects/`: `ch32fun` プロジェクト
+  - `ch32v006_blink/`: CH32V006 用の最小 C Blink
 - `arduino_support/`: CH32V006 を Arduino IDE から使うためのローカル拡張
-- `ch32fun/`: CH32V006 のビルドと書き込みに使う upstream ツールキット
+- `ch32fun/`: CH32V006 のビルドと書き込みに使う upstream submodule
 - `scripts/`: Arduino CLI ユーティリティとインストール用スクリプト
 - `worklog/`: セットアップ、判断、実機テストの記録
 
-`ch32fun/` はヘッダ、ビルド設定、`minichlink`、参考実装を提供します。
+`ch32fun/` は特定の upstream commit に固定され、ヘッダ、ビルド設定、
+`minichlink`、参考実装を提供します。
