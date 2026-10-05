@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include "../ch32v003_arduino_game/game_logic.h"
+#include "../sketches/ch32v003_game/game_logic.h"
 
 using namespace GameLogic;
 

@@ -4,7 +4,7 @@
 
 1. `arduino-ide` で Arduino IDE を起動する。
 2. **Tools > Board > UIAPduino > Pro Micro CH32V006 (Experimental)** を選ぶ。
-3. [`ch32v006_arduino_blink.ino`](ch32v006_arduino_blink.ino) を開く。
+3. [`ch32v006_blink.ino`](ch32v006_blink.ino) を開く。
 4. **Upload** を押す。リセットボタンのタイミング合わせは不要。
 
 内蔵 LED は `PC3` で、短く 2 回点滅したあと少し止まるパターンを繰り返します。
@@ -22,7 +22,7 @@
 
 ## ローカル拡張の導入
 
-[`../arduino_support`](../arduino_support) のファイルを、Arduino データディレクトリ
+[`arduino_support`](../../arduino_support) のファイルを、Arduino データディレクトリ
 内の対応する UIAP core ディレクトリへコピーします。
 
 ```text

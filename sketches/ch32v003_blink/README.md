@@ -7,7 +7,7 @@ UIAPduino Pro Micro CH32V003 V1.4 向けの、簡潔な Arduino IDE セットア
 
 1. `arduino-ide` で Arduino IDE を起動する。
 2. **Tools > Board > UIAPduino > Pro Micro CH32V003** を選ぶ。
-3. [`ch32v003_arduino_blink.ino`](ch32v003_arduino_blink.ino) を開く。
+3. [`ch32v003_blink.ino`](ch32v003_blink.ino) を開く。
 4. 初回書き込みでは USB を抜き、リセットを押したまま再接続し、リセットを離してから **Upload** を押す。
 5. 2 回目以降は USB をつないだまま、リセット、**Upload**、書き込み後にもう一度リセット。
 
@@ -124,4 +124,4 @@ Seamless Switch で不要になるのは USB の抜き差しだけです。リ�
 - [Official UIAPduino V1.4 guide](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4)
 - [Arduino IDE downloads](https://www.arduino.cc/en/software)
 - [UIAPduino board manager](https://github.com/YuukiUmeta-UIAP/board_manager_files)
-- [Repository overview](../README.md)
+- [Repository overview](../../README.md)

@@ -44,7 +44,7 @@ Makefile では `CH32V006` を選び、USB ID `1209:b806` のオンボード書�
 ### Arduino IDE は使えるか
 
 公式の V006 V1.1 ドキュメントでは、Arduino IDE と PlatformIO は未対応です。
-このリポジトリには、実験用の Arduino 版として `../ch32v006_arduino_blink` も
+このリポジトリには、[実験用の Arduino Blink](../sketches/ch32v006_blink/) も
 ありますが、確実に戻れる基準線としてはこの `ch32fun` 版を残しておくのが無難
 です。
 

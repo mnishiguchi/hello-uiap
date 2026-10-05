@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
+SKETCH_ROOT=$REPO_ROOT/sketches
+SKETCH_DIR=${ARDUINO_SKETCH_DIR:-"$HOME/Arduino/sketches"}
+COPIED=0
+
+mkdir -p "$SKETCH_DIR"
+
+for source in "$SKETCH_ROOT"/*; do
+  [[ -d "$source" ]] || continue
+
+  sketch_name=${source##*/}
+  [[ -f "$source/$sketch_name.ino" ]] || continue
+
+  cp -a "$source" "$SKETCH_DIR/"
+  printf 'Copied %s -> %s\n' "$sketch_name" "$SKETCH_DIR/$sketch_name"
+  ((COPIED += 1))
+done
+
+if ((COPIED == 0)); then
+  printf 'No Arduino sketches found in %s\n' "$SKETCH_ROOT" >&2
+  exit 1
+fi
+
+printf 'Installed %d sketch(es) in %s\n' "$COPIED" "$SKETCH_DIR"

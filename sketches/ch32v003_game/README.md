@@ -148,7 +148,7 @@ I2C は 100 kHz で動作します。
 
 ## コンパイルと書き込み
 
-Arduino IDE で [`ch32v003_arduino_game.ino`](ch32v003_arduino_game.ino) を開き、
+Arduino IDE で [`ch32v003_game.ino`](ch32v003_game.ino) を開き、
 **Tools > Board > UIAPduino > Pro Micro CH32V003** を選択します。
 
 1. **Verify** でコンパイルする。
@@ -158,8 +158,8 @@ Arduino IDE で [`ch32v003_arduino_game.ino`](ch32v003_arduino_game.ino) を開�
 
 初回書き込み、Seamless Switch、USB 権限、
 `Could not initialize any supported programmers` の対処は
-[CH32V003 Arduino Blink の書き込み手順](../ch32v003_arduino_blink/README.md#書き込み)
-と [Tips / FAQ](../ch32v003_arduino_blink/README.md#tips--faq) を参照してください。
+[CH32V003 Arduino Blink の書き込み手順](../ch32v003_blink/README.md#書き込み)
+と [Tips / FAQ](../ch32v003_blink/README.md#tips--faq) を参照してください。
 
 動作確認時の使用量は flash 14,648 / 16,384 bytes（89%）、RAM 880 / 2,048
 bytes（42%）でした。機能追加時は特に flash の残量に注意してください。
@@ -179,7 +179,7 @@ g++ -std=c++14 -Wall -Wextra -Werror \
 ```sh
 arduino-cli compile \
   --fqbn UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink \
-  ch32v003_arduino_game
+  sketches/ch32v003_game
 ```
 
 ## 実装方針
