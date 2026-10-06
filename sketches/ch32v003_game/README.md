@@ -119,8 +119,8 @@ pinMode(10, INPUT_PULLUP);  // ACTION / PD0
               └──────────────┘
 ```
 
-この配置は [UIAPduino Pro Micro CH32V003 V1.4 の公式ピンアウト](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4)
-と UIAPduino Arduino core `1.0.42` のピン定義に照合しています。
+この配置は [UIAPduino Pro Micro CH32V003 V1.4 の公式ピンアウト](https://www.uiap.jp/uiapduino/pro-micro/ch32v003/v1dot4)
+と現在の UIAPduino Arduino core のピン定義に照合しています。
 
 このゲームで使う信号ピンは次の 6 本です。
 
@@ -148,21 +148,40 @@ I2C は 100 kHz で動作します。
 
 ## コンパイルと書き込み
 
-Arduino IDE で [`ch32v003_game.ino`](ch32v003_game.ino) を開き、
-**Tools > Board > UIAPduino > Pro Micro CH32V003** を選択します。
+初めての場合は、先に [Installation](../../docs/installation.md) を済ませてください。
 
-1. **Verify** でコンパイルする。
-2. UIAPduino を write-standby モードにする。
-3. **Upload** を押し、`Image written.` を確認する。
-4. リセットしてゲームを起動する。
+`uiapduino` ヘルパーを使う場合:
 
-初回書き込み、Seamless Switch、USB 権限、
-`Could not initialize any supported programmers` の対処は
-[CH32V003 Arduino Blink の書き込み手順](../ch32v003_blink/README.md#書き込み)
-と [Tips / FAQ](../ch32v003_blink/README.md#tips--faq) を参照してください。
+```sh
+./scripts/uiapduino
+```
 
-動作確認時の使用量は flash 14,648 / 16,384 bytes（89%）、RAM 880 / 2,048
-bytes（42%）でした。機能追加時は特に flash の残量に注意してください。
+次を選びます。
+
+```text
+Pro Micro CH32V003 V1.4
+  -> Choose a sketch
+  -> sketches/ch32v003_game
+  -> Verify the selected sketch
+  -> Upload the selected sketch
+```
+
+Arduino CLI を直接使う場合:
+
+```sh
+FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+
+arduino-cli compile \
+  --fqbn "$FQBN" \
+  ~/Arduino/sketches/ch32v003_game
+
+arduino-cli upload \
+  --fqbn "$FQBN" \
+  ~/Arduino/sketches/ch32v003_game
+```
+
+動作確認時は CH32V003 の 16 KB Flash にかなり近いサイズになるため、機能追加時は
+コンパイル後の Flash 使用量に注意してください。
 
 ## テスト
 
@@ -174,11 +193,11 @@ g++ -std=c++14 -Wall -Wextra -Werror \
 /tmp/game_logic_test
 ```
 
-`arduino-cli` が `PATH` にある場合のターゲット向けコンパイル例:
+リポジトリ内のスケッチを直接ターゲット向けにコンパイルする場合:
 
 ```sh
 arduino-cli compile \
-  --fqbn UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink \
+  --fqbn 'UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash' \
   sketches/ch32v003_game
 ```
 

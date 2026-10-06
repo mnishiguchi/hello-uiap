@@ -1,5 +1,10 @@
 # CH32V006 Arduino Blink
 
+> [!WARNING]
+> これは実験用です。UIAPduino CH32V006 V1.1 の公式ドキュメントでは Arduino IDE /
+> PlatformIO は未対応です。初めて V006 を試す場合は
+> [`ch32fun` Blink](../../ch32fun_projects/ch32v006_blink/) をおすすめします。
+
 ## TL;DR
 
 1. `arduino-ide` で Arduino IDE を起動する。

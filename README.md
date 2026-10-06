@@ -1,66 +1,115 @@
 # hello-uiap
 
-UIAPduino ボードの動作を確認するための Arduino サンプル、ミニゲーム、
-作業記録です。
+UIAPduino を使って Arduino / 組み込み開発を学ぶためのサンプル集です。
 
-## TL;DR
+初めてこのリポジトリを使う場合は、**UIAPduino Pro Micro CH32V003 V1.4** と
+**Arduino CLI** から始めるのがおすすめです。
 
-| やりたいこと | 入口 |
-| --- | --- |
-| CH32V003 を Arduino IDE で試す | [Blink](sketches/ch32v003_blink/) |
-| CH32V003 でミニゲームを試す | [ミニゲーム](sketches/ch32v003_game/) |
-| CH32V006 を Arduino IDE で試す | [Blink（実験的）](sketches/ch32v006_blink/) |
-| CH32V006 を `ch32fun` で試す | [`ch32fun` Blink](ch32fun_projects/ch32v006_blink/) |
+## まずはここから
 
-初めての場合は、公式の UIAPduino ボードパッケージで使える CH32V003 の
-Arduino サンプルから始めるのが簡単です。CH32V006 の Arduino 対応はローカル拡張
-を使う実験的な構成です。
+必要なもの:
 
-## リポジトリの取得
+- UIAPduino Pro Micro CH32V003 V1.4
+- データ通信対応の USB ケーブル
+- `arduino-cli`
+- Git
 
-`ch32fun` を含めて clone します。
+### 1. Arduino CLI を入れる
+
+`mise` を使っている場合:
 
 ```sh
-git clone --recurse-submodules https://github.com/mnishiguchi/hello-uiap.git
+mise use --global arduino@latest
+arduino-cli version
+```
+
+`mise` を使わない場合は、Arduino 公式のインストール手順を参照してください。
+
+- [Arduino CLI - Installation](https://docs.arduino.cc/arduino-cli/installation/)
+
+### 2. このリポジトリを取得する
+
+```sh
+git clone https://github.com/mnishiguchi/hello-uiap.git
 cd hello-uiap
 ```
 
-すでに clone 済みの場合:
+### 3. `uiapduino` を起動する
 
 ```sh
-git submodule update --init --recursive
+./scripts/uiapduino
 ```
 
-## クイックスタート
+以降のコマンドは、リポジトリのルートディレクトリで実行してください。
 
-Arduino サンプルは IDE を起動し、対象ディレクトリの `.ino` ファイルを開きます。
-
-```sh
-arduino-ide
-```
-
-すべてのスケッチを `~/Arduino/sketches` へコピーする場合:
+### 4. サンプルスケッチを Arduino の sketchbook にコピーする
 
 ```sh
 scripts/install-sketches
 ```
 
-Arduino CLI ユーティリティを `~/.local/bin` へリンクする場合:
+サンプルは次の場所へコピーされます。
 
-```sh
-scripts/install-uiapduino
-uiapduino
+```text
+~/Arduino/sketches/
 ```
 
-ボードの選択や書き込み手順は、各サンプルの README を参照してください。
-
-- [CH32V003 Arduino Blink](sketches/ch32v003_blink/README.md)
-- [CH32V003 Arduino Mini Game](sketches/ch32v003_game/README.md)
-- [CH32V006 Arduino Blink](sketches/ch32v006_blink/README.md)
-
-CH32V006 を `ch32fun` でビルド、書き込みする場合:
+### 5. Blink を Verify / Upload する
 
 ```sh
+./scripts/uiapduino
+```
+
+メニューで次を選びます。
+
+```text
+Pro Micro CH32V003 V1.4
+  -> Set up board support
+  -> Choose a sketch
+  -> sketches/ch32v003_blink
+  -> Verify the selected sketch
+  -> Upload the selected sketch
+```
+
+書き込みに成功すると、基板中央のオレンジ LED が点滅します。
+
+詳しいセットアップ手順は [Installation](docs/installation.md) を参照してください。
+
+このリポジトリでは `UIAP_HID` Board Manager package を使用します。公式 UIAPduino
+ドキュメントに掲載されている `UIAP` package との違いは [Installation](docs/installation.md) で説明しています。
+
+## `uiapduino` コマンドについて
+
+[`scripts/uiapduino`](scripts/uiapduino) は `arduino-cli` の薄いラッパーです。
+
+主に次の操作を簡単にします。
+
+- UIAPduino のボードサポートをセットアップする
+- `~/Arduino` 以下のスケッチを選ぶ
+- `~/Arduino/sketches` に新しいスケッチを作る
+- Verify（コンパイル）する
+- Upload（コンパイル + 書き込み）する
+
+Arduino 独自のビルド処理を再実装しているわけではなく、実際の処理は
+`arduino-cli` に任せています。
+
+## サンプル
+
+| サンプル | ボード | 状態 |
+| --- | --- | --- |
+| [CH32V003 Blink](sketches/ch32v003_blink/) | CH32V003 V1.4 | **最初におすすめ** |
+| [CH32V003 Mini Game](sketches/ch32v003_game/) | CH32V003 V1.4 | OLED / ボタン / ブザー |
+| [CH32V006 ch32fun Blink](ch32fun_projects/ch32v006_blink/) | CH32V006 V1.1 | V006 の推奨実験パス |
+| [CH32V006 Arduino Blink](sketches/ch32v006_blink/) | CH32V006 V1.1 | 実験的なローカル拡張 |
+
+## CH32V006 について
+
+CH32V006 V1.1 は CH32V003 と同じ Arduino CLI 手順では扱いません。
+公式ドキュメントでは Arduino IDE / PlatformIO は未対応のため、このリポジトリでは
+`ch32fun` + `minichlink` を基準となる開発パスにしています。
+
+```sh
+git submodule update --init --recursive
 cd ch32fun_projects/ch32v006_blink
 make
 make flash
@@ -68,33 +117,29 @@ make flash
 
 詳しくは [CH32V006 ch32fun Blink](ch32fun_projects/ch32v006_blink/README.md) を参照してください。
 
-## 動作確認した開発環境
+## 公式ドキュメント
 
-- ホスト: LMDE 7 (x86-64)
-- Arduino IDE: 2.3.10、公式 Linux ZIP 版
-- UIAPduino ボードパッケージ: 1.0.42
-- ボード: UIAPduino Pro Micro CH32V003 V1.4 / CH32V006 V1.1
-- 書き込み: USB HID 経由の `minichlink`
+- [UIAPduino Pro Micro CH32V003 V1.4](https://www.uiap.jp/uiapduino/pro-micro/ch32v003/v1dot4)
+- [UIAPduino Pro Micro CH32V006 V1.1](https://www.uiap.jp/uiapduino/pro-micro/ch32v006/v1dot1)
+- [Arduino CLI](https://docs.arduino.cc/arduino-cli/)
+- [Arduino CLI - Getting Started](https://docs.arduino.cc/arduino-cli/getting-started/)
+- [UIAPduino HID Board Manager package](https://github.com/tarosay/board_manager_files)
 
-これは動作確認に使った環境であり、必須条件ではありません。
-
-## Arduino IDE の導入
-
-Arduino IDE は環境に合った方法で導入してください。公式配布版は
-[Arduino Software](https://www.arduino.cc/en/software/) から入手できます。
+ハードウェア固有の注意事項や最新の公式手順は、まず UIAP の公式ドキュメントを
+確認してください。
 
 ## リポジトリ構成
 
-- `sketches/`: Arduino スケッチ
-  - `ch32v003_blink/`: CH32V003 用 Blink
-  - `ch32v003_game/`: CH32V003 用ミニゲーム
-  - `ch32v006_blink/`: CH32V006 用 Blink（実験的）
-- `ch32fun_projects/`: `ch32fun` プロジェクト
-  - `ch32v006_blink/`: CH32V006 用の最小 C Blink
-- `arduino_support/`: CH32V006 を Arduino IDE から使うためのローカル拡張
-- `ch32fun/`: CH32V006 のビルドと書き込みに使う upstream submodule
-- `scripts/`: Arduino CLI ユーティリティとインストール用スクリプト
-- `worklog/`: セットアップ、判断、実機テストの記録
+```text
+hello-uiap/
+├── docs/               # セットアップガイド
+├── sketches/           # Arduino スケッチ
+├── ch32fun_projects/   # ch32fun を使うサンプル
+├── scripts/            # CLI 用ヘルパー
+├── arduino_support/    # V006 Arduino 実験用のローカル拡張
+├── tests/              # ホスト側テスト
+└── worklog/            # 調査・実機テストの記録
+```
 
-`ch32fun/` は特定の upstream commit に固定され、ヘッダ、ビルド設定、
-`minichlink`、参考実装を提供します。
+詳細な検証メモは `worklog/` に残しています。初めて使う場合は、まずこの README と
+[Installation](docs/installation.md) だけ読めば十分です。
