@@ -4,7 +4,7 @@ set -euo pipefail
 ARDUINO_CLI=${ARDUINO_CLI:-arduino-cli}
 SKETCHBOOK=${ARDUINO_SKETCHBOOK:-"$HOME/Arduino"}
 
-UIAP_HID_URL='https://github.com/tarosay/board_manager_files/raw/main/package_uiap_hid_index.json'
+UIAP_URL='https://github.com/YuukiUmeta-UIAP/board_manager_files/raw/main/package_uiap.jp_index.json'
 
 BOARD_NAME=''
 CORE=''
@@ -70,8 +70,8 @@ choose_board() {
   case "$MENU_CHOICE" in
   1)
     BOARD_NAME='UIAPduino Pro Micro CH32V003 V1.4'
-    CORE='UIAP_HID:ch32v'
-    FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+    CORE='UIAP:ch32v'
+    FQBN='UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink'
     SUPPORTED=true
     ;;
   2)
@@ -105,12 +105,12 @@ setup_board() {
   printf '\nSetting up %s...\n' "$BOARD_NAME"
 
   if ! "$ARDUINO_CLI" config dump |
-    grep -Fq "$UIAP_HID_URL"; then
+    grep -Fq "$UIAP_URL"; then
     printf 'Adding UIAPduino board package URL...\n'
 
     "$ARDUINO_CLI" config add \
       board_manager.additional_urls \
-      "$UIAP_HID_URL" || return
+      "$UIAP_URL" || return
   else
     printf 'Board package URL already configured.\n'
   fi
@@ -202,7 +202,7 @@ prepare_v003_upload() {
   printf '  2. Hold the board button while reconnecting USB.\n'
   printf '  3. Release the button immediately.\n'
   printf '\n'
-  printf 'The V003 bootloader uses USB HID; no serial port needs to be selected.\n'
+  printf 'Writing does not use a serial port; no port needs to be selected.\n'
   printf '\nPress Enter when the board is ready: '
 
   read -r _

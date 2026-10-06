@@ -75,9 +75,6 @@ Pro Micro CH32V003 V1.4
 
 詳しいセットアップ手順は [Installation](docs/installation.md) を参照してください。
 
-このリポジトリでは `UIAP_HID` Board Manager package を使用します。公式 UIAPduino
-ドキュメントに掲載されている `UIAP` package との違いは [Installation](docs/installation.md) で説明しています。
-
 ## `uiapduino` コマンドについて
 
 [`scripts/uiapduino`](scripts/uiapduino) は `arduino-cli` の薄いラッパーです。
@@ -123,7 +120,7 @@ make flash
 - [UIAPduino Pro Micro CH32V006 V1.1](https://www.uiap.jp/uiapduino/pro-micro/ch32v006/v1dot1)
 - [Arduino CLI](https://docs.arduino.cc/arduino-cli/)
 - [Arduino CLI - Getting Started](https://docs.arduino.cc/arduino-cli/getting-started/)
-- [UIAPduino HID Board Manager package](https://github.com/tarosay/board_manager_files)
+- [UIAPduino Board Manager package](https://github.com/YuukiUmeta-UIAP/board_manager_files)
 
 ハードウェア固有の注意事項や最新の公式手順は、まず UIAP の公式ドキュメントを
 確認してください。

@@ -40,7 +40,7 @@ Upload の前に、ヘルパーが V003 を書き込み待機モードにする�
 ## Arduino CLI を直接使う
 
 ```sh
-FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+FQBN='UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink'
 ```
 
 Verify:
@@ -92,7 +92,7 @@ Seamless Switch の 3 行を入れておくと、初回書き込み後はリセ�
 
 ## Tips
 
-- Upload に通常のシリアルポート選択は不要です。V003 のブートローダとは USB HID で通信します。
+- Upload に通常のシリアルポート選択は不要です。
 - USB ケーブルは充電専用ではなく、データ通信対応のものを使います。
 - 書き込みが不安定な場合は、短い USB ケーブルや別の USB ポートを試します。
 - Linux で権限エラーになる場合は、公式ガイドの Linux 用 udev 設定を確認します。
@@ -100,6 +100,6 @@ Seamless Switch の 3 行を入れておくと、初回書き込み後はリセ�
 ## 参考
 
 - [UIAPduino Pro Micro CH32V003 V1.4 - Official Guide](https://www.uiap.jp/uiapduino/pro-micro/ch32v003/v1dot4)
-- [UIAPduino HID Board Manager package](https://github.com/tarosay/board_manager_files)
+- [UIAPduino Board Manager package](https://github.com/YuukiUmeta-UIAP/board_manager_files)
 - [Arduino CLI](https://docs.arduino.cc/arduino-cli/)
 - [Installation](../../docs/installation.md)

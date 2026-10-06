@@ -169,7 +169,7 @@ Pro Micro CH32V003 V1.4
 Arduino CLI を直接使う場合:
 
 ```sh
-FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+FQBN='UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink'
 
 arduino-cli compile \
   --fqbn "$FQBN" \
@@ -197,7 +197,7 @@ g++ -std=c++14 -Wall -Wextra -Werror \
 
 ```sh
 arduino-cli compile \
-  --fqbn 'UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash' \
+  --fqbn 'UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink' \
   sketches/ch32v003_game
 ```
 

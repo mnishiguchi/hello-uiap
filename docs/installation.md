@@ -79,47 +79,24 @@ Actions
   -> Set up board support
 ```
 
-ヘルパーは Arduino CLI を使って、V003 用の Board Manager URL と
-`UIAP_HID:ch32v` core をセットアップします。
+ヘルパーは Arduino CLI を使って、公式 UIAPduino ドキュメントと同じ Board Manager URL と
+`UIAP:ch32v` core をセットアップします。
 
-使用している Board Manager package:
-
-- [UIAPduino HID Board Manager Files](https://github.com/tarosay/board_manager_files)
-
-### 公式ドキュメントの Board Manager package との違い
-
-[UIAPduino Pro Micro CH32V003 V1.4 の公式セットアップ手順](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4#board-adding-and-sketch-writing)
-では、次の Board Manager URL が案内されています。
+使用する Board Manager URL:
 
 ```text
 https://github.com/YuukiUmeta-UIAP/board_manager_files/raw/main/package_uiap.jp_index.json
 ```
 
-この package を使うと、次の core / board がインストールされます。
+インストールされる core / board:
 
 ```text
 UIAP:ch32v
 └── Pro Micro CH32V003
 ```
 
-一方、このリポジトリでは次の HID 対応 package を使用します。
-
-```text
-https://github.com/tarosay/board_manager_files/raw/main/package_uiap_hid_index.json
-```
-
-こちらでは次の core / board を使用します。
-
-```text
-UIAP_HID:ch32v
-└── HID ProMicro CH32V003
-```
-
-このリポジトリのサンプルと `uiapduino` ヘルパーは、`UIAP_HID` package と
-`uiapflash` を使った USB HID 経由の書き込みで確認しています。
-
-そのため、このリポジトリを使う場合は以下の `UIAP_HID` 手順に従ってください。
-公式ドキュメントを直接たどる場合は、package 名・board 名・コマンドが異なる点に注意してください。
+これは [UIAPduino Pro Micro CH32V003 V1.4 の公式セットアップ手順](https://www.uiap.jp/en/uiapduino/pro-micro/ch32v003/v1dot4#board-adding-and-sketch-writing)
+で案内されている package と同じです。
 
 Arduino の標準ディレクトリはそのまま使います。
 
@@ -187,8 +164,8 @@ Upload the selected sketch
 3. すぐにボタンを離す。
 4. ヘルパーに戻って Enter を押す。
 
-書き込みには USB HID を使うため、通常の Arduino のように `/dev/ttyACM0` などの
-シリアルポートを選択する必要はありません。
+書き込みはシリアルポート経由ではないため、通常の Arduino のように `/dev/ttyACM0` などの
+ポートを選択する必要はありません。
 
 書き込みに成功すると Blink スケッチが起動し、基板中央のオレンジ LED が点滅します。
 
@@ -264,7 +241,7 @@ arduino-cli sketch new my_blink
 ヘルパーを使わずに同じ操作をすることもできます。
 
 ```sh
-FQBN='UIAP_HID:ch32v:CH32V003:pnum=V14,upload_method=uiapflash'
+FQBN='UIAP:ch32v:CH32V00x_EVT:pnum=CH32V003V1DOT4,upload_method=minichlink'
 ```
 
 Verify:
