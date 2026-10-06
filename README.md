@@ -129,7 +129,7 @@ make flash
 
 ```text
 hello-uiap/
-├── docs/               # セットアップガイド
+├── docs/               # セットアップガイド / ADR
 ├── sketches/           # Arduino スケッチ
 ├── ch32fun_projects/   # ch32fun を使うサンプル
 ├── scripts/            # CLI 用ヘルパー
@@ -140,3 +140,5 @@ hello-uiap/
 
 詳細な検証メモは `worklog/` に残しています。初めて使う場合は、まずこの README と
 [Installation](docs/installation.md) だけ読めば十分です。
+
+設計上の判断は [Architecture Decision Records](docs/adr/README.md) にまとめています。
